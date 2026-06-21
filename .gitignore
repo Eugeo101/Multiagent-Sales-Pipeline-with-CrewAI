@@ -4,7 +4,6 @@ lib/
 .DS_Store
 .venv
 .vscode
-uv.lock
 src/sales_pipeline_flow/__pycache__
 src/sales_pipeline_flow/crews/email_writing_crew/__pycache__
 src/sales_pipeline_flow/crews/lead_scoring_crew/__pycache__
