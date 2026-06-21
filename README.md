@@ -1,56 +1,160 @@
-# {{crew_name}} Crew
+# Sales-Pipeline-Flow — CrewAI Multi-Agent Lead Qualification Network
 
-Welcome to the {{crew_name}} Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+This repository implements a production-grade automated sales pipeline using **CrewAI Flows**. It orchestrates two distinct specialized agentic **Crews** (`LeadScoringCrew` and `EmailWritingCrew`) to ingest raw lead form data, perform rigorous background profile validation and cultural fit analysis, and generate highly targeted, conversion-optimized outbound follow-up drafts using **Google Gemini** infrastructure.
 
-## Installation
+---
 
-Ensure you have Python >=3.10 <3.14 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+## Project Structure
 
-First, if you haven't already, install uv:
+```text
+sales_pipeline_flow/
+├── pyproject.toml              ← App dependencies, metadata, and Python constraints (>=3.11)
+├── uv.lock                     ← Deterministic dependency lockfile
+├── .env                        ← Local credentials & API keys (do not commit)
+├── .gitignore                  ← Prevents leaking credentials or virtual environments
+│
+└── src/
+    └── sales_pipeline_flow/
+        ├── __init__.py
+        ├── main.py             ← Event-driven Flow router orchestration (@flow, @start, @listen)
+        │
+        └── crews/
+            ├── lead_scoring_crew/
+            │   ├── lead_scoring_crew.py  ← Crew builder, Pydantic data schema enforcement
+            │   └── config/
+            │       ├── agents.yaml       ← Roles, goals, backstories for verification specialists
+            │       └── tasks.yaml        ← Context parsing and numerical indexing configurations
+            │
+            └── email_writing_crew/
+                ├── email_writing_crew.py ← Crew class mappings and LLM hook connections
+                └── config/
+                    ├── agents.yaml       ← Content specialists & engagement strategists configs
+                    └── tasks.yaml        ← Personalization parameters and CTA injection logic
 
-```bash
-pip install uv
 ```
 
-Next, navigate to your project directory and install the dependencies:
+---
 
-(Optional) Lock the dependencies and install them by using the CLI command:
-```bash
-crewai install
-```
+## Setup
 
-### Customizing
+Ensure you are working in an environment running **Python 3.11, 3.12, or 3.13** to satisfy core vector tracking wheel allocations (`onnxruntime`).
 
-**Add your `OPENAI_API_KEY` into the `.env` file**
-
-- Modify `src/sales_pipeline_flow/config/agents.yaml` to define your agents
-- Modify `src/sales_pipeline_flow/config/tasks.yaml` to define your tasks
-- Modify `src/sales_pipeline_flow/crew.py` to add your own logic, tools and specific args
-- Modify `src/sales_pipeline_flow/main.py` to add custom inputs for your agents and tasks
-
-## Running the Project
-
-To kickstart your flow and begin execution, run this from the root folder of your project:
+### 1. Initialize Environment & Sync Dependencies
 
 ```bash
-crewai run
+# Sync environment dependencies using uv (highly recommended)
+uv sync
+
+# Or alternatively install using standard packages
+pip install -r requirements.txt
+
 ```
 
-This command initializes the sales_pipeline_flow Flow as defined in your configuration.
+### 2. Configure Local Authentication
 
-This example, unmodified, will run a content creation flow on AI Agents and save the output to `output/post.md`.
+Create a `.env` file in the root folder of your project workspace:
 
-## Understanding Your Crew
+```bash
+GOOGLE_API_KEY="YourGeminiKeyHere"
 
-The sales_pipeline_flow Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+```
 
-## Support
+---
 
-For support, questions, or feedback regarding the {{crew_name}} Crew or crewAI.
+## Configuration Mappings
 
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
+### Agent Setup (`config/agents.yaml`)
 
-Let's create wonders together with the power and simplicity of crewAI.
+Your infrastructure runs on 5 highly decoupled agent profiles split across two separate operational pools:
+
+| Crew Pool | Agent Name | Primary Operational Responsibility |
+| --- | --- | --- |
+| **Lead Scoring** | `lead_data_agent` | Extracts and profiles structured metadata from raw input text logs. |
+| **Lead Scoring** | `cultural_fit_agent` | Benchmarks lead goals against CrewAI enterprise deployment pitches. |
+| **Lead Scoring** | `scoring_validation_agent` | Aggregates matrix profiles into a validated structural Pydantic report. |
+| **Email Writing** | `email_content_specialist` | Generates short, point-to-point contextual personalized draft copy. |
+| **Email Writing** | `engagement_strategist` | Strips out generic salutations; forces immediate conversion hooks & CTAs. |
+
+---
+
+## Usage Examples
+
+### 1. Local Pipeline Execution
+
+To execute your event-driven flow locally through the command-line interface executor:
+
+```bash
+python -m crewai run
+
+```
+
+When kicked off, the pipeline receives input context via the flow runner wrapper layer:
+
+```python
+inputs = {
+    "name": "Jane Doe",
+    "job_title": "Director of AI Infrastructure",
+    "company": "Enterprise Corp",
+    "email": "jane@enterprisecorp.com",
+    "use_case": "Looking to orchestrate hundreds of autonomous workers across legacy databases."
+}
+
+```
+
+### 2. Cloud Production Deployment (CrewAI AMP)
+
+To host your autonomous pipeline agents as managed, low-latency microservices on the Agent Management Platform:
+
+```bash
+# Step 1: Connect your local terminal instance to the platform dashboard
+python -m crewai.cli.cli login
+
+# Step 2: Bind workspace references to your remote private GitHub repository container
+python -m crewai.cli.cli deploy create --skip-validate
+
+# Step 3: Compile, push your branches live, and instantiate production web endpoints
+python -m crewai deploy push
+
+```
+
+---
+
+## Operational Pipeline Mechanics
+
+```text
+[Raw Input Parameters] 
+       │
+       ▼
+┌────────────────────────────────────────────────────────┐
+│ 1. LEAD SCORING CREW                                   │
+│    - Profile Harvesting ────> Cultural Alignment Matrix│
+│    - Score Index (0-100)                               │
+└──────────────────────┬─────────────────────────────────┘
+                       │
+                       ▼ (Pydantic Output Model Bridge)
+┌────────────────────────────────────────────────────────┐
+│ 2. EMAIL WRITING CREW                                  │
+│    - Personalized Drafting ──> Conversion Optimization │
+│    - Removal of Fluff & Closing Salutations            │
+└──────────────────────┬─────────────────────────────────┘
+                       │
+                       ▼
+[Optimized Outbound Discovery Email Output Ready to Send]
+
+```
+
+| Pipeline Task Step | Handled By | Input Requirements | Generated Artifact Result |
+| --- | --- | --- | --- |
+| `lead_data_collection` | `lead_data_agent` | `{name}`, `{company}`, `{use_case}` | Comprehensive Personal & Corporate Data Report |
+| `cultural_fit_analysis` | `cultural_fit_agent` | Captured Dossier Data | Strategic alignment assessment & index (0 to 10) |
+| `lead_scoring_and_validation` | `scoring_validation_agent` | Aggregated Analytics | Clean Pydantic Payload (`score`, `personal_info`, `company_info`) |
+| `email_drafting` | `email_content_specialist` | Parsed Pydantic Payload | Raw, highly targeted personalized inline response text |
+| `engagement_optimization` | `engagement_strategist` | Raw Content Draft | Finalized outbound email draft containing high-impact CTAs |
+
+---
+
+## Implementation Notes
+
+* **Security Guardrails**: The project root uses strict `.gitignore` patterns. Under no circumstances should your local `.env` key registers be tracked or pushed to public remote repositories.
+* **Windows Environment Management**: If you encounter an `Access is denied (os error 5)` bug during deployment compilation runs on Windows platforms, bypass local validation checks using the `--skip-validate` configuration switch; the remote cloud infrastructure environment operates securely on independent native Linux system setups.
+* **Data Flow Safety**: Data between independent crews moves safely by forcing structural schema conversions using Pydantic models attached right to the validation task definitions before mapping properties into downstream execution queues.
