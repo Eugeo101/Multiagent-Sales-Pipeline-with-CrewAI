@@ -1,0 +1,28 @@
+email_drafting:
+  description: >
+    Craft a highly personalized email using the provided lead profile details.
+    The email should speak directly to the lead's interests and the needs of their company.
+    This is a follow-up to a lead form submission, so keep it short and to the point.
+    Do not use any generic salutations or closing remarks, nor overly complex sentences.
+
+    Our Company and Product:
+    - Company Name: CrewAI
+    - Product: Multi-Agent Orchestration Platform
+    - Pitch: We are a platform that allows you to orchestrate AI Agents for automations to any vertical.
+
+    Use the following context fields:
+    Personal Info: {personal_info}
+    Company Info: {company_info}
+    Lead Score: {lead_score}
+  expected_output: >
+    A personalized email draft that addresses the lead by name, references their role/company, and targets their needs.
+  agent: email_content_specialist
+
+engagement_optimization:
+  description: >
+    Review the personalized email draft and optimize it with strong CTAs and engagement hooks.
+    Keep in mind they filled out a form; keep it short and highly relevant.
+    Ensure it strongly encourages them to schedule an immediate discovery meeting.
+  expected_output: >
+    An optimized outbound conversion email draft containing clear action elements and hooks.
+  agent: engagement_strategist

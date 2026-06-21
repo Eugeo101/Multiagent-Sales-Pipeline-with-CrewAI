@@ -1,0 +1,22 @@
+[project]
+name = "sales_pipeline_flow"
+version = "0.1.0"
+description = "sales_pipeline_flow using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "crewai[tools]==1.14.4"
+]
+
+[project.scripts]
+kickoff = "sales_pipeline_flow.main:kickoff"
+run_crew = "sales_pipeline_flow.main:kickoff"
+plot = "sales_pipeline_flow.main:plot"
+run_with_trigger = "sales_pipeline_flow.main:run_with_trigger"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "flow"

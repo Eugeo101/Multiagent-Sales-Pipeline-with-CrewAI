@@ -1,0 +1,32 @@
+lead_data_collection:
+  description: >
+    Collect and analyze the following information about the lead:
+    - Name: {name}
+    - Job Title: {job_title}
+    - Company Name: {company}
+    - Email: {email}
+    - Use Case Provided: {use_case}
+
+    Assess how relevant the lead's role is to the decision-making process on a scale from 0 to 10.
+    Evaluate the industry, estimated size, and market presence of their company.
+  expected_output: >
+    A comprehensive data report containing categorized personal information and company metrics.
+  agent: lead_data_agent
+
+cultural_fit_analysis:
+  description: >
+    Assess the cultural alignment between the lead's company and CrewAI.
+    Analyze their objectives and match them against our pitch: "We are a platform that allows you to orchestrate AI Agents for automations to any vertical."
+    Assign a qualitative score (0-10) representing the overall cultural fit.
+  expected_output: >
+    A detailed assessment report including a cultural fit score (0-10) and supporting comments.
+  agent: cultural_fit_agent
+
+lead_scoring_and_validation:
+  description: >
+    Aggregate all previous analysis and calculate a final lead score (0-100).
+    Consider role relevance, company scale, and cultural fit scores.
+    Compile this into a clear structured validation summary.
+  expected_output: >
+    A validated lead score report containing the final numerical score, personal summary extraction, and company summary extraction.
+  agent: scoring_validation_agent
