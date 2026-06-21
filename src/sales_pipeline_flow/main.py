@@ -2,8 +2,8 @@ from crewai.flow.flow import Flow, listen, start
 from pydantic import BaseModel
 from typing import List, Dict, Any
 
-from src.sales_pipeline_flow.crews.lead_scoring_crew.lead_scoring_crew import LeadScoringCrew
-from src.sales_pipeline_flow.crews.email_writing_crew.email_writing_crew import EmailWritingCrew
+from sales_pipeline_flow.crews.lead_scoring_crew.lead_scoring_crew import LeadScoringCrew
+from sales_pipeline_flow.crews.email_writing_crew.email_writing_crew import EmailWritingCrew
 
 # Optional: Define a clean structured state tracker
 class PipelineState(BaseModel):
