@@ -5,7 +5,7 @@ description = "sales_pipeline_flow using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 requires-python = ">=3.11,<3.14"
 dependencies = [
-    "crewai[tools]==1.14.4"
+    "crewai[tools,google-genai]==1.14.4"
 ]
 
 [project.scripts]
